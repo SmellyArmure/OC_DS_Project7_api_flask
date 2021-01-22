@@ -35,14 +35,14 @@ feat_desc = pd.read_csv(path, index_col=0)
 path = os.path.join('model', 'bestmodel_joblib.pkl')
 with open(path, 'rb') as file:
     bestmodel = joblib.load(file)
-# path = os.path.join('model', 'threshold.pkl')
-# with open(path, 'rb') as file:
-#     thresh = joblib.load(file)
+path = os.path.join('model', 'threshold.pkl')
+with open(path, 'rb') as file:
+    thresh = joblib.load(file)
 
-# # Split the steps of the best pipeline
-# preproc_step = bestmodel.named_steps['preproc']
-# featsel_step = bestmodel.named_steps['featsel']
-# clf_step = bestmodel.named_steps['clf']
+# Split the steps of the best pipeline
+preproc_step = bestmodel.named_steps['preproc']
+featsel_step = bestmodel.named_steps['featsel']
+clf_step = bestmodel.named_steps['clf']
 
 # #--------------------------------------------------------
 # # # load training and test set from csv files
@@ -66,7 +66,6 @@ with open(path, 'rb') as file:
 # # compute the data to be used by the best classifier
 # X_tr_featsel = X_tr_prepro[featsel_cols]
 # X_te_featsel = X_te_prepro[featsel_cols]
-
 
 
 # # refit the model on X_train (avoid pbes with importance getter ?)
