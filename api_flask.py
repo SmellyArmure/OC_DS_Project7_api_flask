@@ -79,8 +79,7 @@ app = Flask(__name__)
 # Test : http://127.0.0.1:5000
 @app.route("/")
 def index():
-    return clf_step.fit(X_tr_featsel, y_train['TARGET'])
-# "API loaded, models and data loaded, data computed…"
+    return "API loaded, models and data loaded, data computed…"
 
 # return json object of feature description when needed
 # Test : http://127.0.0.1:5000/api/feat_desc
