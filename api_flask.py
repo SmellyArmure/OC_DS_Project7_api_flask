@@ -44,17 +44,17 @@ preproc_step = bestmodel.named_steps['preproc']
 featsel_step = bestmodel.named_steps['featsel']
 clf_step = bestmodel.named_steps['clf']
 
-# #--------------------------------------------------------
-# # # load training and test set from csv files
-# # X_train = dict_cleaned['X_train']
-# # y_train = dict_cleaned['y_train']
-# # X_test = dict_cleaned['X_test']
-# path = os.path.join('data', 'X_train.csv')
-# X_train = pd.read_csv(path, index_col='SK_ID_CURR')
-# path = os.path.join('data', 'y_train.csv')
-# y_train = pd.read_csv(path, index_col='SK_ID_CURR')
-# path = os.path.join('data', 'X_test.csv')
-# X_test = pd.read_csv(path, index_col='SK_ID_CURR')
+#--------------------------------------------------------
+# # load training and test set from csv files
+# X_train = dict_cleaned['X_train']
+# y_train = dict_cleaned['y_train']
+# X_test = dict_cleaned['X_test']
+path = os.path.join('data', 'X_train.csv')
+X_train = pd.read_csv(path, index_col='SK_ID_CURR')
+path = os.path.join('data', 'y_train.csv')
+y_train = pd.read_csv(path, index_col='SK_ID_CURR')
+path = os.path.join('data', 'X_test.csv')
+X_test = pd.read_csv(path, index_col='SK_ID_CURR')
 
 # # compute the preprocessed data (encoding and standardization)
 # X_tr_prepro = preproc_step.transform(X_train)
