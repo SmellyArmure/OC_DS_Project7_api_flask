@@ -151,7 +151,7 @@ def neigh_cust():
     				'y_neigh': y_neigh_json})
 
 # return all data of training set when requested
-# Test : http://127.0.0.1:5000/api/all_proc_data/
+# Test : http://127.0.0.1:5000/api/all_proc_data_tr/
 @app.route('/api/all_proc_data_tr/')
 def all_proc_data_tr():
     # get all data from X_tr_featsel, X_te_featsel and y_train data
@@ -183,8 +183,8 @@ def scoring_cust():
 # get shap values of the customer and 20 nearest neighbors
 # Test : http://127.0.0.1:5000/api/shap_values/?SK_ID_CURR=100128
 def shap_values():
-    # # refit the classifier to avoid 'objective' value error in shap...
-    # clf_step.fit(X_tr_featsel, y_train('TARGET'))
+    # refit the classifier to avoid 'objective' value error in shap...
+    clf_step.fit(X_tr_featsel, y_train['TARGET]')
     # Parse http request to get arguments (sk_id_cust)
     sk_id_cust = int(request.args.get('SK_ID_CURR'))
     # create the shap tree explainer of our classifier
