@@ -32,9 +32,12 @@ feat_desc = pd.read_csv(path, index_col=0)
 
 #--------------------------------------------------------
 # # best model (pipeline)
-path = os.path.join('model', 'bestmodel_thresh_joblib.pkl')
+path = os.path.join('model', 'bestmodel_joblib.pkl')
 with open(path, 'rb') as file:
-    bestmodel, thresh = joblib.load(file)
+    bestmodel = joblib.load(file)
+path = os.path.join('model', 'threshold.pkl')
+with open(path, 'rb') as file:
+    thresh = joblib.load(file)
 
 
 # # Split the steps of the best pipeline
