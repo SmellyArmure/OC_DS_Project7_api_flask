@@ -68,8 +68,8 @@ X_tr_featsel = X_tr_prepro[featsel_cols]
 X_te_featsel = X_te_prepro[featsel_cols]
 
 
-# # refit the model on X_train (avoid pbes with importance getter ?)
-# clf_step.fit(X_tr_featsel, y_train)
+# refit the model on X_train (avoid pbes with importance getter ?)
+clf_step.fit(X_tr_featsel, y_train)
 
 ###############################################################
 # instantiate Flask object
