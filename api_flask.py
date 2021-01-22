@@ -35,22 +35,22 @@ feat_desc = pd.read_csv(path, index_col=0)
 path = os.path.join('model', 'bestmodel_joblib.pkl')
 with open(path, 'rb') as file:
     bestmodel = joblib.load(file)
-# path = os.path.join('model', 'threshold.pkl')
-# with open(path, 'rb') as file:
-#     thresh = joblib.load(file)
+path = os.path.join('model', 'threshold.pkl')
+with open(path, 'rb') as file:
+    thresh = joblib.load(file)
 
 
-# # Split the steps of the best pipeline
-# preproc_step = bestmodel.named_steps['preproc']
-# featsel_step = bestmodel.named_steps['featsel']
-# clf_step = bestmodel.named_steps['clf']
+# Split the steps of the best pipeline
+preproc_step = bestmodel.named_steps['preproc']
+featsel_step = bestmodel.named_steps['featsel']
+clf_step = bestmodel.named_steps['clf']
 
 
-# #--------------------------------------------------------
-# # # load training and test set from csv files
-# # X_train = dict_cleaned['X_train']
-# # y_train = dict_cleaned['y_train']
-# # X_test = dict_cleaned['X_test']
+#--------------------------------------------------------
+# # load training and test set from csv files
+# X_train = dict_cleaned['X_train']
+# y_train = dict_cleaned['y_train']
+# X_test = dict_cleaned['X_test']
 path = os.path.join('data', 'X_train.csv')
 X_train = pd.read_csv(path, index_col='SK_ID_CURR')
 path = os.path.join('data', 'y_train.csv')
@@ -58,21 +58,21 @@ y_train = pd.read_csv(path, index_col='SK_ID_CURR')
 path = os.path.join('data', 'X_test.csv')
 X_test = pd.read_csv(path, index_col='SK_ID_CURR')
 
-# # compute the preprocessed data (encoding and standardization)
-# X_tr_prepro = preproc_step.transform(X_train)
-# X_te_prepro = preproc_step.transform(X_test)
-# # get the name of the columns after encoding
-# preproc_cols = X_tr_prepro.columns
-# # get the name of the columns selected using SelectFromModel
-# featsel_cols = preproc_cols[featsel_step.get_support()]
-# # compute the data to be used by the best classifier
-# X_tr_featsel = X_tr_prepro[featsel_cols]
-# X_te_featsel = X_te_prepro[featsel_cols]
+# compute the preprocessed data (encoding and standardization)
+X_tr_prepro = preproc_step.transform(X_train)
+X_te_prepro = preproc_step.transform(X_test)
+# get the name of the columns after encoding
+preproc_cols = X_tr_prepro.columns
+# get the name of the columns selected using SelectFromModel
+featsel_cols = preproc_cols[featsel_step.get_support()]
+# compute the data to be used by the best classifier
+X_tr_featsel = X_tr_prepro[featsel_cols]
+X_te_featsel = X_te_prepro[featsel_cols]
 
 
 
-# # refit the model on X_train (avoid pbes with importance getter ?)
-# clf_step.fit(X_tr_featsel, y_train)
+# refit the model on X_train (avoid pbes with importance getter ?)
+clf_step.fit(X_tr_featsel, y_train)
 
 ###############################################################
 # instantiate Flask object
