@@ -56,16 +56,16 @@ y_train = pd.read_csv(path, index_col='SK_ID_CURR')
 path = os.path.join('data', 'X_test.csv')
 X_test = pd.read_csv(path, index_col='SK_ID_CURR')
 
-# # compute the preprocessed data (encoding and standardization)
-# X_tr_prepro = preproc_step.transform(X_train)
-# X_te_prepro = preproc_step.transform(X_test)
-# # get the name of the columns after encoding
-# preproc_cols = X_tr_prepro.columns
-# # get the name of the columns selected using SelectFromModel
-# featsel_cols = preproc_cols[featsel_step.get_support()]
-# # compute the data to be used by the best classifier
-# X_tr_featsel = X_tr_prepro[featsel_cols]
-# X_te_featsel = X_te_prepro[featsel_cols]
+# compute the preprocessed data (encoding and standardization)
+X_tr_prepro = preproc_step.transform(X_train)
+X_te_prepro = preproc_step.transform(X_test)
+# get the name of the columns after encoding
+preproc_cols = X_tr_prepro.columns
+# get the name of the columns selected using SelectFromModel
+featsel_cols = preproc_cols[featsel_step.get_support()]
+# compute the data to be used by the best classifier
+X_tr_featsel = X_tr_prepro[featsel_cols]
+X_te_featsel = X_te_prepro[featsel_cols]
 
 
 # # refit the model on X_train (avoid pbes with importance getter ?)
