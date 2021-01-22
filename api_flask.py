@@ -68,8 +68,8 @@ X_tr_featsel = X_tr_prepro[featsel_cols]
 X_te_featsel = X_te_prepro[featsel_cols]
 
 
-# refit the model on X_train (avoid pbes with importance getter ?)
-# clf_step.fit(X_tr_featsel, y_train['TARGET'])
+# # refit the model on X_train (avoid pbes with importance getter ?)
+# clf_step.fit(X_tr_featsel, y_train['TARGET']);
 
 ###############################################################
 # instantiate Flask object
@@ -79,7 +79,7 @@ app = Flask(__name__)
 # Test : http://127.0.0.1:5000
 @app.route("/")
 def index():
-    return str(y_train.shape)+str(y_train.columns)+str(y_train['TARGET'].shape)
+    return clf_step.fit(X_tr_featsel, y_train['TARGET'])
 # "API loaded, models and data loaded, data computed…"
 
 # return json object of feature description when needed
