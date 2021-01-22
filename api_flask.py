@@ -30,17 +30,17 @@ from imblearn.pipeline import Pipeline
 path = os.path.join('data', 'feat_desc.csv')
 feat_desc = pd.read_csv(path, index_col=0)
 
-#--------------------------------------------------------
-# # best model (pipeline)
-path = os.path.join('model', 'bestmodel_thresh_joblib.pkl')
-with open(path, 'rb') as file:
-    bestmodel, thresh = joblib.load(file)
+# #--------------------------------------------------------
+# # # best model (pipeline)
+# path = os.path.join('model', 'bestmodel_thresh_joblib.pkl')
+# with open(path, 'rb') as file:
+#     bestmodel, thresh = joblib.load(file)
 
 
-# Split the steps of the best pipeline
-preproc_step = bestmodel.named_steps['preproc']
-featsel_step = bestmodel.named_steps['featsel']
-clf_step = bestmodel.named_steps['clf']
+# # Split the steps of the best pipeline
+# preproc_step = bestmodel.named_steps['preproc']
+# featsel_step = bestmodel.named_steps['featsel']
+# clf_step = bestmodel.named_steps['clf']
 
 
 # #--------------------------------------------------------
