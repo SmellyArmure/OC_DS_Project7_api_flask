@@ -8,7 +8,7 @@ python api_flask.py # api/
 import os
 import sys
 import joblib
-import dill
+# import dill
 import pandas as pd
 import sklearn
 from flask import Flask, jsonify, request
@@ -37,9 +37,9 @@ feat_desc = pd.read_csv(path, index_col=0)
 # thresh = 0.5306122448979591
 
 # # best model (pipeline)
-path = os.path.join('model', 'P7_04_bestmodel_thresh.pkl')
+path = os.path.join('model', 'bestmodel_thresh_joblib.pkl')
 with open(path, 'rb') as file:
-    bestmodel, thresh = dill.load(file)
+    bestmodel, thresh = joblib.load(file)
 
 
 # Split the steps of the best pipeline
@@ -84,7 +84,7 @@ app = Flask(__name__)
 # Test : http://127.0.0.1:5000
 @app.route("/")
 def index():
-    return "API, models and data loaded…\nwaiting for a request"
+    return "API loaded, models and data loaded, data computed…"
 
 # # return json object of feature description when needed
 # # Test : http://127.0.0.1:5000/api/feat_desc
