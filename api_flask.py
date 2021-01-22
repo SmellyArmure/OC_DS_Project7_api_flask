@@ -52,7 +52,7 @@ clf_step = bestmodel.named_steps['clf']
 path = os.path.join('data', 'X_train.csv')
 X_train = pd.read_csv(path, index_col='SK_ID_CURR')
 path = os.path.join('data', 'y_train.csv')
-y_train = pd.read_csv(path, index_col='SK_ID_CURR')
+y_train = pd.Series(pd.read_csv(path, index_col='SK_ID_CURR'))
 path = os.path.join('data', 'X_test.csv')
 X_test = pd.read_csv(path, index_col='SK_ID_CURR')
 
@@ -68,8 +68,8 @@ X_tr_featsel = X_tr_prepro[featsel_cols]
 X_te_featsel = X_te_prepro[featsel_cols]
 
 
-# refit the model on X_train (avoid pbes with importance getter ?)
-# clf_step.fit(X_tr_featsel, y_train)
+refit the model on X_train (avoid pbes with importance getter ?)
+clf_step.fit(X_tr_featsel, y_train)
 
 ###############################################################
 # instantiate Flask object
