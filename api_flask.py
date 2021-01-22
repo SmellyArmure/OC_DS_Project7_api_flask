@@ -79,7 +79,8 @@ app = Flask(__name__)
 # Test : http://127.0.0.1:5000
 @app.route("/")
 def index():
-    return "API loaded, models and data loaded, data computed…"+str(X_tr_featsel.shape)+str(y_train.shape)
+    return str(y_train.shape)+y_train.columns+y_train['TARGET']
+# "API loaded, models and data loaded, data computed…"
 
 # return json object of feature description when needed
 # Test : http://127.0.0.1:5000/api/feat_desc
