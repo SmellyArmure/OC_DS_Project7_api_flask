@@ -12,5 +12,6 @@ category_encoders==2.2.2
 joblib==1.0.0
 scikit_learn==0.24.1
 imbalanced-learn==0.7.0
+dill==0.3.3
 
 

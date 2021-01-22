@@ -8,7 +8,7 @@ python api_flask.py # api/
 import os
 import sys
 import joblib
-# import dill
+import dill
 import pandas as pd
 import sklearn
 from flask import Flask, jsonify, request
