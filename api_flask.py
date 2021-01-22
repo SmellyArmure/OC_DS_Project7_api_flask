@@ -69,7 +69,7 @@ X_te_featsel = X_te_prepro[featsel_cols]
 
 
 # refit the model on X_train (avoid pbes with importance getter ?)
-clf_step.fit(X_tr_featsel, y_train['TARGET'])
+# clf_step.fit(X_tr_featsel, y_train['TARGET'])
 
 ###############################################################
 # instantiate Flask object
