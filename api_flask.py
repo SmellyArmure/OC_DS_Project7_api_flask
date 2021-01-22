@@ -184,7 +184,7 @@ def scoring_cust():
 # Test : http://127.0.0.1:5000/api/shap_values/?SK_ID_CURR=100128
 def shap_values():
     # refit the classifier to avoid 'objective' value error in shap...
-    clf_step.fit(X_tr_featsel, y_train['TARGET]')
+    clf_step.fit(X_tr_featsel, y_train['TARGET'])
     # Parse http request to get arguments (sk_id_cust)
     sk_id_cust = int(request.args.get('SK_ID_CURR'))
     # create the shap tree explainer of our classifier
