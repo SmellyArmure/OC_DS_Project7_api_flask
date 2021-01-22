@@ -20,7 +20,8 @@ from P7_functions import CustTransformer # (le module doit avoir le même nom qu
 from sklearn.feature_selection import SelectFromModel
 from lightgbm import LGBMClassifier
 
-from sklearn.pipeline import Pipeline
+# from sklearn.pipeline import Pipeline
+from imblearn.pipeline import Pipeline
 
 #########################################################
 # Loading data and model (all the files are in WEB/data)
@@ -36,10 +37,10 @@ feat_desc = pd.read_csv(path, index_col=0)
 #     bestmodel = joblib.load(file)
 # thresh = 0.5306122448979591
 
-# # # best model (pipeline)
-# path = os.path.join('model', 'bestmodel_thresh_joblib.pkl')
-# with open(path, 'rb') as file:
-#     bestmodel, thresh = joblib.load(file)
+# # best model (pipeline)
+path = os.path.join('model', 'bestmodel_thresh_joblib.pkl')
+with open(path, 'rb') as file:
+    bestmodel, thresh = joblib.load(file)
 
 
 # # Split the steps of the best pipeline
