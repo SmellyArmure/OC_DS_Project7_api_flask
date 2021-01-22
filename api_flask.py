@@ -31,10 +31,10 @@ path = os.path.join('data', 'feat_desc.csv')
 feat_desc = pd.read_csv(path, index_col=0)
 
 #--------------------------------------------------------
-# # best model (pipeline)
-# path = os.path.join('model', 'bestmodel_joblib.pkl')
-# with open(path, 'rb') as file:
-#     bestmodel = joblib.load(file)
+# best model (pipeline)
+path = os.path.join('model', 'bestmodel_joblib.pkl')
+with open(path, 'rb') as file:
+    bestmodel = joblib.load(file)
 # path = os.path.join('model', 'threshold.pkl')
 # with open(path, 'rb') as file:
 #     thresh = joblib.load(file)
@@ -69,8 +69,8 @@ feat_desc = pd.read_csv(path, index_col=0)
 
 
 
-# refit the model on X_train (avoid pbes with importance getter ?)
-clf_step.fit(X_tr_featsel, y_train)
+# # refit the model on X_train (avoid pbes with importance getter ?)
+# clf_step.fit(X_tr_featsel, y_train)
 
 ###############################################################
 # instantiate Flask object
