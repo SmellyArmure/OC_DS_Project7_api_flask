@@ -39,10 +39,10 @@ path = os.path.join('model', 'threshold.pkl')
 with open(path, 'rb') as file:
     thresh = joblib.load(file)
 
-# Split the steps of the best pipeline
-preproc_step = bestmodel.named_steps['preproc']
-featsel_step = bestmodel.named_steps['featsel']
-clf_step = bestmodel.named_steps['clf']
+# # Split the steps of the best pipeline
+# preproc_step = bestmodel.named_steps['preproc']
+# featsel_step = bestmodel.named_steps['featsel']
+# clf_step = bestmodel.named_steps['clf']
 
 # #--------------------------------------------------------
 # # # load training and test set from csv files
