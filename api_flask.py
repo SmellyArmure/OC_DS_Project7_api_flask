@@ -120,7 +120,7 @@ def data_cust():
     				'data': X_cust_json,
     				'data_proc': X_cust_proc_json})
 
-# find 20 nearrest neighbors among the training set
+# find 20 nearest neighbors among the training set
 def get_df_neigh(sk_id_cust):
     # get data of 20 nearest neigh in the X_tr_featsel dataframe (pd.DataFrame)
     neigh = NearestNeighbors(n_neighbors=20)
@@ -210,7 +210,6 @@ def shap_values():
                     'shap_val': shap_val_all_json,
                     'exp_val': expected_value,
                     'X_neigh_': X_neigh__json})
-
 
 ####################################
 # if the api is run and not imported as a module
