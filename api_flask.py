@@ -15,8 +15,8 @@ from flask import Flask, jsonify, request
 import json
 from sklearn.neighbors import NearestNeighbors
 import shap
-
-from P7_functions import CustTransformer # (le module doit avoir le même nom que celui utilisé pour le pickle du modèle !!)
+# (le module doit avoir le même nom que celui utilisé pour le pickle du modèle !!)
+from P7_functions import CustTransformer
 from sklearn.feature_selection import SelectFromModel
 from lightgbm import LGBMClassifier
 
@@ -72,13 +72,15 @@ X_te_featsel = X_te_prepro[featsel_cols]
 app = Flask(__name__)
 
 # view when API is launched
-# Test : http://127.0.0.1:5000
+# Test local : http://127.0.0.1:5000
+# Test : https://oc-api-flask-mm.herokuapp.com
 @app.route("/")
 def index():
     return "API loaded, models and data loaded, data computed…"
 
 # answer when asking for sk_ids
-#  Test : http://127.0.0.1:5000/api/sk_ids/
+# Test local: http://127.0.0.1:5000/api/sk_ids/
+# Test Heroku : https://oc-api-flask-mm.herokuapp.com/api/sk_ids/
 @app.route('/api/sk_ids/')
 def sk_ids():
     # Extract list of all the 'SK_ID_CURR' ids in the X_test dataframe
@@ -90,7 +92,8 @@ def sk_ids():
     		        'data': sk_ids_json})
 
 # return json object of feature description when needed
-# Test : http://127.0.0.1:5000/api/feat_desc
+# Test local : http://127.0.0.1:5000/api/feat_desc
+# Test Heroku : https://oc-api-flask-mm.herokuapp.com/api/feat_desc
 @app.route('/api/feat_desc/')
 def send_feat_desc():
     # Convert pd.Series to JSON
@@ -100,7 +103,8 @@ def send_feat_desc():
     		        'data': features_desc_json})
 
 # return data of one customer when requested (SK_ID_CURR)
-# Test : http://127.0.0.1:5000/api/data_cust/?SK_ID_CURR=100128
+# Test local : http://127.0.0.1:5000/api/data_cust/?SK_ID_CURR=100128
+# Test Heroku : https://oc-api-flask-mm.herokuapp.com/api/data_cust/?SK_ID_CURR=100128
 @app.route('/api/data_cust/')
 def data_cust():
     # Parse the http request to get arguments (sk_id_cust)
@@ -131,7 +135,8 @@ def get_df_neigh(sk_id_cust):
     return X_neigh_df, y_neigh
 
 # return data of 20 neighbors of one customer when requested (SK_ID_CURR)
-# Test : http://127.0.0.1:5000/api/neigh_cust/?SK_ID_CURR=100128
+# Test local : http://127.0.0.1:5000/api/neigh_cust/?SK_ID_CURR=100128
+# Test Heroku : https://oc-api-flask-mm.herokuapp.com/api/neigh_cust/?SK_ID_CURR=100128
 @app.route('/api/neigh_cust/')
 def neigh_cust():
     # Parse the http request to get arguments (sk_id_cust)
@@ -147,7 +152,8 @@ def neigh_cust():
     				'y_neigh': y_neigh_json})
 
 # return all data of training set when requested
-# Test : http://127.0.0.1:5000/api/all_proc_data_tr/
+# Test local : http://127.0.0.1:5000/api/all_proc_data_tr/
+# Test Heroku : https://oc-api-flask-mm.herokuapp.com/api/all_proc_data_tr/
 @app.route('/api/all_proc_data_tr/')
 def all_proc_data_tr():
     # get all data from X_tr_featsel, X_te_featsel and y_train data
@@ -160,7 +166,8 @@ def all_proc_data_tr():
     				'y_train': y_train_json})
 
 # answer when asking for score and decision about one customer
-# Test : http://127.0.0.1:5000/api/scoring_cust/?SK_ID_CURR=100128
+# Test local : http://127.0.0.1:5000/api/scoring_cust/?SK_ID_CURR=100128
+# Test Heroku : https://oc-api-flask-mm.herokuapp.com/api/scoring_cust/?SK_ID_CURR=100128
 @app.route('/api/scoring_cust/')
 def scoring_cust():
     # Parse http request to get arguments (sk_id_cust)
@@ -177,7 +184,8 @@ def scoring_cust():
 
 @app.route('/api/shap_values/')
 # get shap values of the customer and 20 nearest neighbors
-# Test : http://127.0.0.1:5000/api/shap_values/?SK_ID_CURR=100128
+# Test local : http://127.0.0.1:5000/api/shap_values/?SK_ID_CURR=100128
+# Test Heroku : https://oc-api-flask-mm.herokuapp.com/api/shap_values/?SK_ID_CURR=100128
 def shap_values():
     # refit the classifier to avoid 'objective' value error in shap...
     clf_step.fit(X_tr_featsel, y_train['TARGET'])
