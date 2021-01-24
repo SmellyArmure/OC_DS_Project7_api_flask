@@ -1,8 +1,8 @@
-''' 
+"""
 -*- coding: utf-8 -*-
-To run from the directory 'WEB':
-python api_flask.py # api/
-'''
+To run from the directory 'PROJECT7_api'
+$ python api_flask.py
+""" 
 
 # Load librairies
 import os
@@ -45,10 +45,7 @@ featsel_step = bestmodel.named_steps['featsel']
 clf_step = bestmodel.named_steps['clf']
 
 #--------------------------------------------------------
-# # load training and test set from csv files
-# X_train = dict_cleaned['X_train']
-# y_train = dict_cleaned['y_train']
-# X_test = dict_cleaned['X_test']
+# load training and test set from csv files
 path = os.path.join('data', 'X_train.csv')
 X_train = pd.read_csv(path, index_col='SK_ID_CURR')
 path = os.path.join('data', 'y_train.csv')
@@ -67,7 +64,6 @@ featsel_cols = preproc_cols[featsel_step.get_support()]
 X_tr_featsel = X_tr_prepro[featsel_cols]
 X_te_featsel = X_te_prepro[featsel_cols]
 
-
 # # refit the model on X_train (avoid pbes with importance getter ?)
 # clf_step.fit(X_tr_featsel, y_train['TARGET']);
 
@@ -81,16 +77,6 @@ app = Flask(__name__)
 def index():
     return "API loaded, models and data loaded, data computed…"
 
-# return json object of feature description when needed
-# Test : http://127.0.0.1:5000/api/feat_desc
-@app.route('/api/feat_desc/')
-def send_feat_desc():
-    # Convert pd.Series to JSON
-    features_desc_json = json.loads(feat_desc.to_json())
-    # Return the processed data as a json object
-    return jsonify({'status': 'ok',
-    		        'data': features_desc_json})
-
 # answer when asking for sk_ids
 #  Test : http://127.0.0.1:5000/api/sk_ids/
 @app.route('/api/sk_ids/')
@@ -102,6 +88,16 @@ def sk_ids():
     # Returning the processed data
     return jsonify({'status': 'ok',
     		        'data': sk_ids_json})
+
+# return json object of feature description when needed
+# Test : http://127.0.0.1:5000/api/feat_desc
+@app.route('/api/feat_desc/')
+def send_feat_desc():
+    # Convert pd.Series to JSON
+    features_desc_json = json.loads(feat_desc.to_json())
+    # Return the processed data as a json object
+    return jsonify({'status': 'ok',
+    		        'data': features_desc_json})
 
 # return data of one customer when requested (SK_ID_CURR)
 # Test : http://127.0.0.1:5000/api/data_cust/?SK_ID_CURR=100128
