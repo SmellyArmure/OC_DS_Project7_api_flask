@@ -233,18 +233,18 @@ def shap_values():
     # Conversion of shap values from log odds to probabilities of the customer's shap values
     shap_t, exp_t = shap_transform_scale(shap_val_X_tr_te.loc[sk_id_cust],
                                          expected_val,
-                                         clf_step.predict_proba(X_neigh_)[:,1][-1])
+                                         clf_step.predict_proba(X_neigh)[:,1][-1])
     shap_val_cust_trans = pd.Series(shap_t,
-                                    index=X_neigh_.columns)
+                                    index=X_neigh.columns)
     # Converting the pd.Series to JSON
-    X_neigh__json = json.loads(X_neigh_.to_json())
+    X_neigh__json = json.loads(X_neigh.to_json())
     shap_val_neigh_json = json.loads(shap_val_neigh.to_json())
     shap_val_cust_trans_json = json.loads(shap_val_cust_trans.to_json())
     # Returning the processed data
     return jsonify({'status': 'ok',
                     'shap_val': shap_val_neigh_json, # pd.DataFrame
                     'shap_val_cust_trans': shap_val_cust_trans_json, # pd.Series
-                    'exp_val': expected_value,
+                    'exp_val': expected_val,
                     'exp_val_trans': exp_t,
                     'X_neigh_': X_neigh__json})
 
