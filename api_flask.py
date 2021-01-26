@@ -68,6 +68,14 @@ X_te_featsel = X_te_prepro[featsel_cols]
 # # refit the model on X_train (avoid pbes with importance getter ?)
 # clf_step.fit(X_tr_featsel, y_train['TARGET']);
 
+# SHAP values of the train set and test set
+path = os.path.join('data', 'shap_val_X_tr_te.csv')
+shap_val_X_tr_te = pd.read_csv(path, index_col=0)
+# expected value
+path = os.path.join('data', 'expected_val.pkl')
+with open(path, 'rb') as file:
+    expected_val = joblib.load(file)
+
 ###############################################################
 # instantiate Flask object
 app = Flask(__name__)
@@ -217,42 +225,29 @@ def shap_transform_scale(shap_values, expected_value, model_prediction):
 # Test local : http://127.0.0.1:5000/api/shap_values/?SK_ID_CURR=100128
 # Test Heroku : https://oc-api-flask-mm.herokuapp.com/api/shap_values/?SK_ID_CURR=100128
 def shap_values():
-    # refit the classifier to avoid 'objective' value error in shap...
-    clf_step.fit(X_tr_featsel, y_train['TARGET'])
     # Parse http request to get arguments (sk_id_cust)
     sk_id_cust = int(request.args.get('SK_ID_CURR'))
-    # create the shap tree explainer of our classifier
-    explainer = shap.TreeExplainer(clf_step)
     # return the nearest neighbors
     X_neigh, y_neigh = get_df_neigh(sk_id_cust)
-    # return data of the customer
-    X_cust = X_te_featsel.loc[sk_id_cust:sk_id_cust]
-    # compute the SHAP values of the 20 neighbors + customer for the model
+    X_cust = X_te_featsel.loc[sk_id_cust].to_frame(sk_id_cust).T
     X_neigh_ = pd.concat([X_neigh, X_cust], axis=0)
-    # shap values pour X train and test
-    shap_val_all = pd.DataFrame(explainer.shap_values(X_neigh_)[1],
-                                index=X_neigh_.index,
-                                columns=X_neigh_.columns)
-    # compute expected value (approx mean of predictions on training set)
-    # NB to be calculated AFTER shap values !!!!!!!!!!!!!!
-    expected_value = explainer.expected_value[1] # depends on the model only (already fitted on training set)
-
+    # prepare the shap values of nearest neighbors + customer
+    shap_val_neigh_ =  shap_val_X_tr_te.loc[X_neigh_.index]
     # Conversion of shap values from log odds to probabilities of the customer's shap values
-    shap_t, exp_t = shap_transform_scale(shap_val_all.iloc[-1],
-                                         expected_value,
+    shap_t, exp_t = shap_transform_scale(shap_val_X_tr_te.loc[sk_id_cust],
+                                         expected_val,
                                          clf_step.predict_proba(X_neigh_)[:,1][-1])
-    shap_val_all_trans = pd.Series(shap_t,
-                                   index=X_neigh_.columns)
+    shap_val_cust_trans = pd.Series(shap_t,
+                                    index=X_neigh_.columns)
     # Converting the pd.Series to JSON
     X_neigh__json = json.loads(X_neigh_.to_json())
-    shap_val_all_json = json.loads(shap_val_all.to_json())
-    shap_val_all_trans_json = json.loads(shap_val_all_trans.to_json())
-    
+    shap_val_neigh_json = json.loads(shap_val_neigh_.to_json())
+    shap_val_cust_trans_json = json.loads(shap_val_cust_trans.to_json())
     # Returning the processed data
     return jsonify({'status': 'ok',
-                    'shap_val': shap_val_all_json, # pd.DataFrame
-                    'shap_val_trans': shap_val_all_trans_json, # pd.Series
-                    'exp_val': expected_value,
+                    'shap_val': shap_val_neigh_json, # pd.DataFrame
+                    'shap_val_cust_trans': shap_val_cust_trans_json, # pd.Series
+                    'exp_val': expected_val,
                     'exp_val_trans': exp_t,
                     'X_neigh_': X_neigh__json})
 
