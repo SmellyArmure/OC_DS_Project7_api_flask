@@ -15,7 +15,8 @@ from flask import Flask, jsonify, request
 import json
 from sklearn.neighbors import NearestNeighbors
 import shap
-# (le module doit avoir le même nom que celui utilisé pour le pickle du modèle !!)
+# # (le module doit avoir le même nom que celui utilisé pour le pickle du modèle !!)
+# from custtransformer import CustTransformer
 from P7_functions import CustTransformer
 from sklearn.feature_selection import SelectFromModel
 from lightgbm import LGBMClassifier
@@ -101,6 +102,19 @@ def send_feat_desc():
     # Return the processed data as a json object
     return jsonify({'status': 'ok',
     		        'data': features_desc_json})
+    
+# return json object of feature importance (lgbm attribute)
+# Test local : http://127.0.0.1:5000/api/feat_imp
+# Test Heroku : https://oc-api-flask-mm.herokuapp.com/api/feat_imp
+@app.route('/api/feat_imp/')
+def send_feat_imp():
+    feat_imp = pd.Series(clf_step.feature_importances_,
+                         index=X_te_featsel.columns).sort_values(ascending=False)
+    # Convert pd.Series to JSON
+    feat_imp_json = json.loads(feat_imp.to_json())
+    # Return the processed data as a json object
+    return jsonify({'status': 'ok',
+    		        'data': feat_imp_json})
 
 # return data of one customer when requested (SK_ID_CURR)
 # Test local : http://127.0.0.1:5000/api/data_cust/?SK_ID_CURR=100128
@@ -182,6 +196,22 @@ def scoring_cust():
     		        'score': score_cust,
                     'thresh': thresh})
 
+#Importing the logit function for the base value transformation
+from scipy.special import expit 
+# Conversion of shap values from log odds to probabilities
+def shap_transform_scale(shap_values, expected_value, model_prediction):
+    #Compute the transformed base value, which consists in applying the logit function to the base value    
+    expected_value_transformed = expit(expected_value)
+    #Computing the original_explanation_distance to construct the distance_coefficient later on
+    original_explanation_distance = sum(shap_values)
+    #Computing the distance between the model_prediction and the transformed base_value
+    distance_to_explain = model_prediction - expected_value_transformed
+    #The distance_coefficient is the ratio between both distances which will be used later on
+    distance_coefficient = original_explanation_distance / distance_to_explain
+    #Transforming the original shapley values to the new scale
+    shap_values_transformed = shap_values / distance_coefficient
+    return shap_values_transformed, expected_value_transformed
+
 @app.route('/api/shap_values/')
 # get shap values of the customer and 20 nearest neighbors
 # Test local : http://127.0.0.1:5000/api/shap_values/?SK_ID_CURR=100128
@@ -206,13 +236,24 @@ def shap_values():
     # compute expected value (approx mean of predictions on training set)
     # NB to be calculated AFTER shap values !!!!!!!!!!!!!!
     expected_value = explainer.expected_value[1] # depends on the model only (already fitted on training set)
+
+    # Conversion of shap values from log odds to probabilities of the customer's shap values
+    shap_t, exp_t = shap_transform_scale(shap_val_all.iloc[-1],
+                                         expected_value,
+                                         clf_step.predict_proba(X_neigh_)[:,1][-1])
+    shap_val_all_trans = pd.Series(shap_t,
+                                   index=X_neigh_.columns)
     # Converting the pd.Series to JSON
-    shap_val_all_json = json.loads(shap_val_all.to_json())
     X_neigh__json = json.loads(X_neigh_.to_json())
+    shap_val_all_json = json.loads(shap_val_all.to_json())
+    shap_val_all_trans_json = json.loads(shap_val_all_trans.to_json())
+    
     # Returning the processed data
     return jsonify({'status': 'ok',
-                    'shap_val': shap_val_all_json,
+                    'shap_val': shap_val_all_json, # pd.DataFrame
+                    'shap_val_trans': shap_val_all_trans_json, # pd.Series
                     'exp_val': expected_value,
+                    'exp_val_trans': exp_t,
                     'X_neigh_': X_neigh__json})
 
 ####################################
